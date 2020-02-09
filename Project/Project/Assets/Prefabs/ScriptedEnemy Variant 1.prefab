@@ -108,6 +108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 233a3c303551a7546abcea8e757b5cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathEffect: {fileID: 8556572963758562039, guid: 9438bf9c650922e418eabb392a4c1efe,
+    type: 3}
 --- !u!1001 &1461935580147399766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,6 +117,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6722132937496151594, guid: 91dabef0d7ba46549a28bfe21c3f4e08,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 86ed97e64b3d9b8488366894e051c426, type: 2}
     - target: {fileID: 6722132937496151605, guid: 91dabef0d7ba46549a28bfe21c3f4e08,
         type: 3}
       propertyPath: m_Layer

@@ -7,6 +7,7 @@ public class PlayerMovements : MonoBehaviour
     //Reference to our <CharacterController>
     public CharacterController controller;
     [SerializeField] private Camera camPlayer = default;
+    public EnemySpawner spawner;
 
     public float speed = 12f;
     public float gravity = -9.81f;
@@ -21,12 +22,7 @@ public class PlayerMovements : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    
-    private void Start()
-    {
-        
-
-    }
+    public Recul animationRecul = default;
 
 
     // Update is called once per frame
@@ -68,9 +64,8 @@ public class PlayerMovements : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             gameObject.GetComponent<AudioSource>().Play();
+            animationRecul.fireAnimation();
             Shoot();
-            
-
         }
 
     }
@@ -80,16 +75,15 @@ public class PlayerMovements : MonoBehaviour
         
         if (Physics.Raycast(camPlayer.transform.position, camPlayer.transform.forward * 300f, out RaycastHit hit)) 
         {
-
-            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            if (hit.transform.gameObject.layer == 9)
             {
 
                 EnemyBehavior target = hit.transform.GetComponent<EnemyBehavior>();
 
                 if (target != null) 
                 {
-                    
-                    target.Death();
+                    spawner.enemyKilled();
+                    target.Death(hit.point, hit.normal);
                 }
             }
         }
