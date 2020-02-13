@@ -3,22 +3,16 @@
 public class EnemySpawner : MonoBehaviour
 {
     
-    [SerializeField] private GameObject prefabEnemy = default;          // Les cible que l'on spawn.
-    [SerializeField] private Transform enemyParent = default;           // gameObject pour stocker les cibles
+    // -- References
 
-    // -- Pour gerer les affichage sur l'UI (texte nombre d'ennemies restant + text de fin de jeu)
-    [SerializeField] private TMPro.TextMeshProUGUI textnbEnemy;
-    [SerializeField] private TMPro.TextMeshProUGUI endText;
 
-    // -- Reference a notre chrono / compteur d'ennemies restant.
-    [SerializeField] private ChronoDisplay chrono = default;            
-    [SerializeField] private EnemyCounterDisplay counter = default;
-    
-    // - Le nombre d'enemie qu'il y aura sur le jeu.
-    private int numberOfEnemy = 20;
+    [SerializeField] private GameObject prefabEnemy = default;      // L'enemie que l'on fera spawn       
+    [SerializeField] private Transform enemyParent = default;       // Holder pour les ennemies
+    [SerializeField] private GameManager gameManager = default;     // Reference au gameManager ( gestion chrono + compteur ennemies)
 
-    // -- Valeur pour delimiter le spawn des enemies.
-    private float minXZ = -100f;
+
+    // -- Données pour le spawner                
+    private float minXZ = -100f;                                    //Valeur pour delimiter le spawn des enemies
     private float maxXZ = 100f;
     private float mixY = 2;
     private float maxY = 60;
@@ -26,11 +20,12 @@ public class EnemySpawner : MonoBehaviour
     // -- Quand on lance le jeu ( On lance le chrono + compteur + spwawn enemie.
     private void OnTriggerEnter()
     {
-        SpawnEnemy();
-        chrono.startTimer();
-        counter.startCounter();
-        textnbEnemy.text = "Nombre d'énemie restant  : ";
+        if (!gameManager.gameStarted) {
+            SpawnEnemy();
+            gameManager.StartGame();
+        }
     }
+
 
     // -- Pour faire spawn les cibles et s'assurer qu'elle ne spawnent pas n'import ou.
     private void SpawnEnemy() {
@@ -46,29 +41,12 @@ public class EnemySpawner : MonoBehaviour
             {
                 GameObject enemy = Instantiate(prefabEnemy, new Vector3(x, y, z), Quaternion.identity, enemyParent);
                 nbEnemies++;
-                if (nbEnemies >= numberOfEnemy) areAllEnemiesThere = true;
+                if (nbEnemies >= gameManager.numberOfEnemy) areAllEnemiesThere = true;
             }
 
         }
     }
 
-    // -- Pour faire decrementer le nombre de cible. (appeller par la classe enemyBehavior.)
-    // Lance la fin du jeu si plus de cible restante.
-    public void enemyKilled() {
-        numberOfEnemy--;
-        if (numberOfEnemy == 0) {
-            chrono.stopChrono();
-            EndOfGame();
-        }
-    }
 
-    // -- Affiche le message de fin du jeu.
-    private void EndOfGame() {
-        endText.text = "Toutes les cibles sont mortes. \n Temps : " + chrono.getTimer().ToString();
-    }
-
-    // -- Pour recuperer le nombre d'ennemies (sert pour le counter)
-    public int getNbEnemy() {
-        return numberOfEnemy;
-    }
+    
 }

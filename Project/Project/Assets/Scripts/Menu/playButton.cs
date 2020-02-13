@@ -6,6 +6,7 @@ public class playButton : MonoBehaviour
 {
     public void OnClick()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(1);
     }
 }

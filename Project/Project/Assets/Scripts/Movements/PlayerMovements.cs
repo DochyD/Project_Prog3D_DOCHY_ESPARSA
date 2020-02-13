@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 public class PlayerMovements : MonoBehaviour
 {
     //Reference to our <CharacterController>
     public CharacterController controller;
     [SerializeField] private Camera camPlayer = default;
-    public EnemySpawner spawner;
+    public GameManager gameManager;
 
     public float speed = 12f;
     public float gravity = -9.81f;
@@ -28,12 +26,12 @@ public class PlayerMovements : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movements();
+        Move();
         Actions();
     }
 
     //To move in space (basically 'Brackeys' Tutorial)
-    void Movements()
+    void Move()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -58,21 +56,26 @@ public class PlayerMovements : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    //To fire a ball
+    
     void Actions()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            gameObject.GetComponent<AudioSource>().Play();
-            animationRecul.fireAnimation();
             Shoot();
+        }
+
+        if (Input.GetButtonDown("Cancel") && !gameManager.gameStarted) {
+            SceneManager.LoadScene(0);
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
     }
 
     void Shoot()
     {
-        
+        gameObject.GetComponent<AudioSource>().Play();
+        animationRecul.fireAnimation();
+
         if (Physics.Raycast(camPlayer.transform.position, camPlayer.transform.forward * 300f, out RaycastHit hit)) 
         {
             if (hit.transform.gameObject.layer == 9)
@@ -82,7 +85,7 @@ public class PlayerMovements : MonoBehaviour
 
                 if (target != null) 
                 {
-                    spawner.enemyKilled();
+                    gameManager.EnemyKilled();
                     target.Death(hit.point, hit.normal);
                 }
             }

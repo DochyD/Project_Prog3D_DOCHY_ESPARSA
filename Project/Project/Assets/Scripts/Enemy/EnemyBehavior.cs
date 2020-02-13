@@ -7,7 +7,7 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour
 {
     public Transform particleEffectHolder;                  // Pour stocker les info temporairement
-    [SerializeField] private ParticleSystem deathEffect;    // Recuperer l'animation de mort
+    [SerializeField] private ParticleSystem deathEffect = default;    // Recuperer l'animation de mort
     
 
     // Fonction que l'on appelle si jamais une cible meurt
